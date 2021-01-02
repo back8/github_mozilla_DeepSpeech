@@ -3,15 +3,19 @@
 from __future__ import absolute_import, division, print_function
 
 import os
-import sys
-import json
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import tensorflow as tf
 import tensorflow.compat.v1.logging as tflogging
 tflogging.set_verbosity(tflogging.ERROR)
+
 import logging
 logging.getLogger('sox').setLevel(logging.ERROR)
+
+import absl.flags
 import glob
+import json
+import sys
 
 from deepspeech_training.util.audio import AudioFile
 from deepspeech_training.util.config import Config, initialize_globals
@@ -149,20 +153,20 @@ def main(_):
 
 if __name__ == '__main__':
     create_flags()
-    tf.app.flags.DEFINE_string('src', '', 'Source path to an audio file or directory or catalog file.'
+    absl.flags.DEFINE_string('src', '', 'Source path to an audio file or directory or catalog file.'
                                           'Catalog files should be formatted from DSAlign. A directory will'
                                           'be recursively searched for audio. If --dst not set, transcription logs (.tlog) will be '
                                           'written in-place using the source filenames with '
                                           'suffix ".tlog" instead of ".wav".')
-    tf.app.flags.DEFINE_string('dst', '', 'path for writing the transcription log or logs (.tlog). '
+    absl.flags.DEFINE_string('dst', '', 'path for writing the transcription log or logs (.tlog). '
                                           'If --src is a directory, this one also has to be a directory '
                                           'and the required sub-dir tree of --src will get replicated.')
-    tf.app.flags.DEFINE_boolean('recursive', False, 'scan dir of audio recursively')
-    tf.app.flags.DEFINE_boolean('force', False, 'Forces re-transcribing and overwriting of already existing '
+    absl.flags.DEFINE_boolean('recursive', False, 'scan dir of audio recursively')
+    absl.flags.DEFINE_boolean('force', False, 'Forces re-transcribing and overwriting of already existing '
                                                 'transcription logs (.tlog)')
-    tf.app.flags.DEFINE_integer('vad_aggressiveness', 3, 'How aggressive (0=lowest, 3=highest) the VAD should '
+    absl.flags.DEFINE_integer('vad_aggressiveness', 3, 'How aggressive (0=lowest, 3=highest) the VAD should '
                                                          'split audio')
-    tf.app.flags.DEFINE_integer('batch_size', 40, 'Default batch size')
-    tf.app.flags.DEFINE_float('outlier_duration_ms', 10000, 'Duration in ms after which samples are considered outliers')
-    tf.app.flags.DEFINE_integer('outlier_batch_size', 1, 'Batch size for duration outliers (defaults to 1)')
-    tf.app.run(main)
+    absl.flags.DEFINE_integer('batch_size', 40, 'Default batch size')
+    absl.flags.DEFINE_float('outlier_duration_ms', 10000, 'Duration in ms after which samples are considered outliers')
+    absl.flags.DEFINE_integer('outlier_batch_size', 1, 'Batch size for duration outliers (defaults to 1)')
+    absl.app.run(main)
